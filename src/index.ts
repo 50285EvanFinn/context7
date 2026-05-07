@@ -49,8 +49,9 @@ server.tool(
         };
       }
 
+      // Show top 10 results instead of 5 to give more options when searching
       const formatted = results
-        .slice(0, 5)
+        .slice(0, 10)
         .map(
           (lib, i) =>
             `${i + 1}. **${lib.name}** (ID: \`${lib.id}\`)\n   ${lib.description || "No description available."}\n   Trust Score: ${lib.trustScore ?? "N/A"} | Snippets: ${lib.totalSnippets ?? "N/A"}`
@@ -93,49 +94,8 @@ server.tool(
     tokens: z
       .number()
       .optional()
-      .default(5000)
-      .describe("Maximum number of tokens to return (default: 5000)"),
+      .default(10000)
+      .describe("Maximum number of tokens to return (default: 10000)"),
   },
   async ({ libraryId, topic, tokens }) => {
-    try {
-      const docs = await getLibraryDocs(libraryId, { topic, tokens });
-
-      if (!docs || docs.trim().length === 0) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: `No documentation found for library ID "${libraryId}"${topic ? ` with topic "${topic}"` : ""}. Try a different library ID or topic.`,
-            },
-          ],
-        };
-      }
-
-      return {
-        content: [{ type: "text", text: docs }],
-      };
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      return {
-        content: [{ type: "text", text: `Error fetching library docs: ${message}` }],
-        isError: true,
-      };
-    }
-  }
-);
-
-async function main() {
-  // Handle orphan process exit (when parent process dies)
-  handleOrphanExit();
-
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-
-  // Log to stderr so it doesn't interfere with MCP stdio communication
-  console.error("context7 MCP server running on stdio");
-}
-
-main().catch((error) => {
-  console.error("Fatal error starting context7 MCP server:", error);
-  process.exit(1);
-});
+    tr
