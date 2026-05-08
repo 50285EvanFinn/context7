@@ -50,5 +50,11 @@
     "type": "git",
     "url": "https://github.com/your-org/context7.git"
   },
-  "author": "your-username (fork of upstash/context7 for personal learning)"
+  "author": "your-username (fork of upstash/context7 for personal learning)",
+  "prettier": {
+    "singleQuote": true,
+    "semi": false,
+    "tabWidth": 2,
+    "printWidth": 100
+  }
 }
